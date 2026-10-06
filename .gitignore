@@ -36,3 +36,7 @@ frontend/dist-ssr/
 .env
 .env.*
 !.env.example
+
+# ===== Dev/prod runtime state (start-dev / start-prod) =====
+.vibebox-dev-state.json
+.vibebox-prod-state.json
