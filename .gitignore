@@ -1,0 +1,38 @@
+# ===== OS files =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== IDE / Editor =====
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ===== Logs =====
+*.log
+logs/
+
+# ===== Java / Maven (backend) =====
+backend/target/
+backend/data/
+backend/!.mvn/wrapper/maven-wrapper.jar
+
+# ===== Node / Vite (frontend) =====
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# ===== Env files =====
+.env
+.env.*
+!.env.example
