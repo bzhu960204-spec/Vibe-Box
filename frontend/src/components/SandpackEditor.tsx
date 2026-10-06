@@ -7,6 +7,7 @@ import {
 } from '@codesandbox/sandpack-react'
 import type { SandpackFiles } from '@codesandbox/sandpack-react'
 import type { SnippetFile } from '@/lib/api'
+import { FileTree } from '@/components/FileTree'
 import { useTheme } from '@/theme/theme-context'
 
 interface SandpackEditorProps {
@@ -15,6 +16,7 @@ interface SandpackEditorProps {
   dependencies: string
   showEditor?: boolean
   showTabs?: boolean
+  showFileTree?: boolean
   editorHeight?: number
 }
 
@@ -36,6 +38,7 @@ export function SandpackEditor({
   dependencies,
   showEditor = true,
   showTabs = true,
+  showFileTree = true,
   editorHeight = 420,
 }: SandpackEditorProps) {
   const { mode } = useTheme()
@@ -54,6 +57,7 @@ export function SandpackEditor({
   const deps = useMemo(() => parseDependencies(dependencies), [dependencies])
 
   const activeFile = sandpackFiles[entryFile] ? entryFile : Object.keys(sandpackFiles)[0]
+  const filePaths = useMemo(() => Object.keys(sandpackFiles), [sandpackFiles])
 
   return (
     <SandpackProvider
@@ -65,6 +69,9 @@ export function SandpackEditor({
       options={{ activeFile }}
     >
       <SandpackLayout>
+        {showEditor && showFileTree && filePaths.length > 1 && (
+          <FileTree paths={filePaths} entryFile={entryFile} height={editorHeight} />
+        )}
         {showEditor && (
           <SandpackCodeEditor
             showTabs={showTabs}

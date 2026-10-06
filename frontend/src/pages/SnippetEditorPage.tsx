@@ -9,14 +9,14 @@ import {
   useSandpack,
 } from '@codesandbox/sandpack-react'
 import type { SandpackFiles } from '@codesandbox/sandpack-react'
-import { ArrowLeft, FileX2, Plus, Star } from 'lucide-react'
+import { ArrowLeft, Plus } from 'lucide-react'
 import { api, type SnippetFile, type SnippetRequest, type SnippetType } from '@/lib/api'
 import { Button } from '@/components/ui/button'
+import { FileTree } from '@/components/FileTree'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { cn } from '@/lib/utils'
 import { useTheme } from '@/theme/theme-context'
 
 const STARTER_FILE: SnippetFile = {
@@ -115,7 +115,7 @@ export function SnippetEditorPage() {
   }, [files])
 
   const addFile = () => {
-    const path = window.prompt('New file path (e.g. /Button.js)')
+    const path = window.prompt('New file path (folders allowed, e.g. components/Button.js)')
     if (!path) return
     const normalized = path.startsWith('/') ? path : `/${path}`
     if (files.some((f) => f.path === normalized)) return
@@ -295,41 +295,6 @@ export function SnippetEditorPage() {
           </Button>
         </div>
 
-        <div className="mb-2 flex flex-wrap gap-1.5">
-          {files.map((f) => (
-            <div
-              key={f.path}
-              className={cn(
-                'flex items-center gap-1 rounded-md border px-2 py-1 text-xs',
-                entryFile === f.path
-                  ? 'border-primary bg-primary/10 text-primary'
-                  : 'border-border text-muted-foreground',
-              )}
-            >
-              <button
-                type="button"
-                title="Set as entry file"
-                onClick={() => setEntryFile(f.path)}
-              >
-                <Star
-                  className={cn('size-3', entryFile === f.path && 'fill-primary')}
-                />
-              </button>
-              <span className="font-mono">{f.path}</span>
-              {files.length > 1 && (
-                <button
-                  type="button"
-                  title="Remove file"
-                  onClick={() => removeFile(f.path)}
-                  className="text-muted-foreground hover:text-destructive"
-                >
-                  <FileX2 className="size-3" />
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-
         <SandpackProvider
           key={providerKey}
           template="react"
@@ -340,6 +305,14 @@ export function SnippetEditorPage() {
         >
           <CodeSync onFiles={(f) => (codeRef.current = f)} />
           <SandpackLayout>
+            <FileTree
+              paths={files.map((f) => f.path)}
+              entryFile={entryFile}
+              editable
+              onSetEntry={setEntryFile}
+              onRemove={removeFile}
+              height={440}
+            />
             <SandpackCodeEditor
               showTabs
               showLineNumbers
