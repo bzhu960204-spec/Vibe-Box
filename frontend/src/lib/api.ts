@@ -49,6 +49,7 @@ export interface Project {
   id: number
   name: string
   description: string | null
+  snippetCount: number
 }
 
 export interface SnippetFilters {
@@ -109,6 +110,9 @@ export const api = {
   },
   listProjects(): Promise<Project[]> {
     return request<Project[]>(`${BASE}/projects`)
+  },
+  getProject(id: number): Promise<Project> {
+    return request<Project>(`${BASE}/projects/${id}`)
   },
   createProject(body: { name: string; description?: string }): Promise<Project> {
     return request<Project>(`${BASE}/projects`, {

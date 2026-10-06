@@ -96,6 +96,7 @@ Write-Host "  Database  : embedded H2 file (backend/data/vibebox.mv.db)" -Foregr
 Write-Host "  Backend   : http://localhost:$BackendPort" -ForegroundColor Green
 Write-Host "  H2 console: http://localhost:$BackendPort/h2-console" -ForegroundColor DarkGray
 Write-Host "  Frontend  : http://localhost:$FrontendPort" -ForegroundColor Green
+Write-Host "  Hot reload: backend via spring-boot-devtools (recompile .java to trigger restart)" -ForegroundColor DarkGray
 Write-Host ""
 
 # --- Start backend ---

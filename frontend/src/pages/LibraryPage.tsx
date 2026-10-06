@@ -5,12 +5,16 @@ import { api } from '@/lib/api'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { SnippetCard } from '@/components/SnippetCard'
+import { SnippetListItem } from '@/components/SnippetListItem'
+import { SnippetViewToggle } from '@/components/SnippetViewToggle'
+import { useSnippetView } from '@/lib/useSnippetView'
 
 export function LibraryPage() {
   const [q, setQ] = useState('')
   const [categoryId, setCategoryId] = useState<string>('')
   const [tag, setTag] = useState<string>('')
   const [projectId, setProjectId] = useState<string>('')
+  const [view, setView] = useSnippetView()
 
   const filters = useMemo(
     () => ({
@@ -85,6 +89,7 @@ export function LibraryPage() {
               </option>
             ))}
           </Select>
+          <SnippetViewToggle view={view} onChange={setView} />
         </div>
       </div>
 
@@ -101,10 +106,16 @@ export function LibraryPage() {
             Try clearing filters or create a new snippet.
           </p>
         </div>
-      ) : (
+      ) : view === 'card' ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {snippets.map((snippet) => (
             <SnippetCard key={snippet.id} snippet={snippet} />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col divide-y divide-border overflow-hidden rounded-lg border border-border">
+          {snippets.map((snippet) => (
+            <SnippetListItem key={snippet.id} snippet={snippet} />
           ))}
         </div>
       )}

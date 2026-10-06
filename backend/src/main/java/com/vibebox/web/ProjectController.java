@@ -4,6 +4,7 @@ import com.vibebox.domain.Project;
 import com.vibebox.dto.ProjectDto;
 import com.vibebox.dto.ProjectRequest;
 import com.vibebox.repository.ProjectRepository;
+import com.vibebox.repository.SnippetRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +17,23 @@ import java.util.List;
 public class ProjectController {
 
     private final ProjectRepository repository;
+    private final SnippetRepository snippetRepository;
 
-    public ProjectController(ProjectRepository repository) {
+    public ProjectController(ProjectRepository repository, SnippetRepository snippetRepository) {
         this.repository = repository;
+        this.snippetRepository = snippetRepository;
     }
 
     @GetMapping
     public List<ProjectDto> list() {
         return repository.findAll().stream().map(this::toDto).toList();
+    }
+
+    @GetMapping("/{id}")
+    public ProjectDto get(@PathVariable Long id) {
+        Project project = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Project not found: " + id));
+        return toDto(project);
     }
 
     @PostMapping
@@ -53,6 +63,7 @@ public class ProjectController {
     }
 
     private ProjectDto toDto(Project p) {
-        return new ProjectDto(p.getId(), p.getName(), p.getDescription());
+        return new ProjectDto(p.getId(), p.getName(), p.getDescription(),
+                snippetRepository.countByProjectId(p.getId()));
     }
 }

@@ -4,8 +4,23 @@ import { Button } from '@/components/ui/button'
 import { useTheme } from '@/theme/theme-context'
 import { ACCENT_OPTIONS, STYLE_OPTIONS } from '@/theme/theme'
 
-export function ThemeSwitcher() {
+export function ThemeSwitcher({ collapsed = false }: { collapsed?: boolean }) {
   const { mode, style, accent, toggleMode, setStyle, setAccent } = useTheme()
+
+  if (collapsed) {
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        className="size-9 w-full"
+        onClick={toggleMode}
+        title={mode === 'dark' ? 'Switch to light' : 'Switch to dark'}
+        aria-label={mode === 'dark' ? 'Switch to light' : 'Switch to dark'}
+      >
+        {mode === 'dark' ? <Moon className="size-4" /> : <Sun className="size-4" />}
+      </Button>
+    )
+  }
 
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-border bg-background/50 p-3">

@@ -24,4 +24,6 @@ public interface SnippetRepository extends JpaRepository<Snippet, Long> {
                          @Param("projectId") Long projectId,
                          @Param("categoryId") Long categoryId,
                          @Param("tag") String tag);
+
+    long countByProjectId(Long projectId);
 }

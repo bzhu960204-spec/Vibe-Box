@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { FolderKanban, Trash2 } from 'lucide-react'
+import { ChevronRight, FolderKanban, Trash2 } from 'lucide-react'
 import { api } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -9,6 +10,7 @@ import { Label } from '@/components/ui/label'
 
 export function ProjectsPage() {
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
 
@@ -71,7 +73,16 @@ export function ProjectsPage() {
         {projectsQuery.data?.map((p) => (
           <div
             key={p.id}
-            className="flex items-center justify-between rounded-lg border border-border bg-card p-4"
+            role="button"
+            tabIndex={0}
+            onClick={() => navigate(`/projects/${p.id}`)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                navigate(`/projects/${p.id}`)
+              }
+            }}
+            className="flex cursor-pointer items-center justify-between rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/50 hover:bg-accent/50"
           >
             <div className="flex items-center gap-3">
               <FolderKanban className="size-5 text-primary" />
@@ -82,14 +93,23 @@ export function ProjectsPage() {
                 )}
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => deleteMutation.mutate(p.id)}
-              title="Delete project"
-            >
-              <Trash2 className="size-4 text-muted-foreground" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">
+                {p.snippetCount} {p.snippetCount === 1 ? 'snippet' : 'snippets'}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  deleteMutation.mutate(p.id)
+                }}
+                title="Delete project"
+              >
+                <Trash2 className="size-4 text-muted-foreground" />
+              </Button>
+              <ChevronRight className="size-4 text-muted-foreground" />
+            </div>
           </div>
         ))}
       </div>
